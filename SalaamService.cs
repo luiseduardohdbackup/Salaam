@@ -15,7 +15,7 @@ namespace Dolphins.Salaam
         /// <summary>
         /// The default SalaamService port.
         /// </summary>
-        private const int port = 54143;
+        private const int port = 54183;
 
         private const int defaultFrequency = 45;
 
@@ -35,7 +35,6 @@ namespace Dolphins.Salaam
         /// <param name="serviceType">Type of the service.</param>
         /// <param name="name">The name of the application.</param>
         /// <param name="port">The port at which the mail application is listening.</param>
-        /// <remarks></remarks>
         public SalaamService(string serviceType, string name, int port)
         {
             if (serviceType.Contains(";"))
@@ -91,7 +90,6 @@ namespace Dolphins.Salaam
         /// Gets or sets a value indicating whether this <see cref="SalaamService"/> is enabled.
         /// </summary>
         /// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-        /// <remarks></remarks>
         public bool Enabled
         {
             get { return timer.Enabled; }
@@ -138,7 +136,7 @@ namespace Dolphins.Salaam
         /// <summary>
         /// Gets the type of the service.
         /// </summary>
-        /// <remarks>The service type is a custom string meant to be used to identify the SalaamService. The universal form of this string is prefered to be <c>_applicationProtocolName</c>.<c>_networkProtocolName</c>. e.g. _teleporter._tcp </remarks>
+        /// <remarks>The service type is a custom string meant to be used to identify the SalaamService. The universal form of this string is preferred to be <c>_applicationProtocolName</c>.<c>_networkProtocolName</c>. e.g. _teleporter._tcp </remarks>
         public string ServiceType { get; private set; }
 
         /// <summary>
@@ -154,19 +152,16 @@ namespace Dolphins.Salaam
         /// <summary>
         /// Occurs when the SalaamService fails to broadcast on the network.
         /// </summary>
-        /// <remarks></remarks>
         public event EventHandler BroadcastFailed;
 
         /// <summary>
         /// Occurs when the service is successfully registered.
         /// </summary>
-        /// <remarks></remarks>
         public event EventHandler Registered;
 
         /// <summary>
         /// Occurs when the service is successfully unregistered.
         /// </summary>
-        /// <remarks></remarks>
         public event EventHandler Unregistered;
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)

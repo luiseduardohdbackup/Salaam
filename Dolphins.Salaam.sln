@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dolphins.Salaam", "Dolphins.Salaam.csproj", "{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Debug|x86.ActiveCfg = Debug|x86
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Debug|x86.Build.0 = Debug|x86
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|x86.ActiveCfg = Release|x86
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Dolphins.Salaam.csproj
+	EndGlobalSection
+EndGlobal

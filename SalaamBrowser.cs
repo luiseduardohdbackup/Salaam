@@ -13,10 +13,9 @@ namespace Dolphins.Salaam
     /// </summary>
     public class SalaamBrowser:IDisposable
     {
+        private List<SalaamClientDateTime> salaamClientDateTimes;
 
-        private List<SalaamClient> clientsList;
-
-        private const int port = 54143;
+        private const int port = 54183;
 
         private const int disappearanceDelaySeconds = 4;
 
@@ -34,36 +33,52 @@ namespace Dolphins.Salaam
 
         private readonly List<IPAddress> currentIPAddresses;
 
-        private string selfServiceType;
-
-        private int selfServicePort;
-
         private bool isBrowserRunning;
 
         /// <summary>
-        /// Gets a value indicating whether the browsers receives self packets or not.
+        /// Gets the salaam clients.
         /// </summary>
-        /// <value><c>true</c> if the browser receives self packets; otherwise, <c>false</c>.</value>
-        public bool ReceivesSelfPackets { get; private set; }
+        public SalaamClient[] SalaamClients
+		{
+			get
+			{
+                SalaamClient[] salaamClients = new SalaamClient[salaamClientDateTimes.Count];
 
+			    for (int i = 0; i < salaamClients.Length; i++)
+			    {
+			        salaamClients[i] = salaamClientDateTimes[i].Client;
+			    }
+
+			    return salaamClients;
+			}
+		}
+
+        /// <summary>
+        /// Gets or sets a value indicating whether browser should receive clients from local machine.
+        /// </summary>
+        /// <value><c>true</c> if should receive from local machine otherwise, <c>false</c>.</value>
+        public bool ReceiveFromLocalMachine { get; set; }
+
+        ///<summary>
+        /// Represents the method that will handle an event that contains the SalaamClient object.
+        ///</summary>
+        ///<param name="sender">The source of the event.</param>
+        ///<param name="e">A <c>SalaamClientEventArgs</c> that contains SalaamClient object.</param>
         public delegate void SalaamClientEventHandler(object sender, SalaamClientEventArgs e);
 
         /// <summary>
         /// Occurs when a new client appears.
         /// </summary>
-        /// <remarks></remarks>
         public event SalaamClientEventHandler ClientAppeared;
 
         /// <summary>
         /// Occurs when a found client disappears.
         /// </summary>
-        /// <remarks></remarks>
         public event SalaamClientEventHandler ClientDisappeared;
 
         /// <summary>
         /// Occurs when the client message changes.
         /// </summary>
-        /// <remarks></remarks>
         public event SalaamClientEventHandler ClientMessageChanged;
 
         /// <summary>
@@ -105,44 +120,44 @@ namespace Dolphins.Salaam
 
             currentIPAddresses = new List<IPAddress>();
 
-            clientsList = new List<SalaamClient>();
-        }
-
-        /// <summary>
-        /// Sets the self packet receive.
-        /// </summary>
-        /// <param name="serviceType">Type of the service.</param>
-        /// <param name="servicePort">The application port.</param>
-        /// <param name="receiveSelfPackets">if set to <c>true</c> handles when the application appers on the local host.</param>
-        public void SetSelfPacketReceive(string serviceType, int servicePort, bool receiveSelfPackets)
-        {
-            selfServiceType = serviceType;
-
-            selfServicePort = servicePort;
-
-            ReceivesSelfPackets = receiveSelfPackets;
+            salaamClientDateTimes = new List<SalaamClientDateTime>();
         }
 
         private void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            List<SalaamClient> salaamClients = new List<SalaamClient>();
+            List<SalaamClientDateTime> tempClientDateTimes = new List<SalaamClientDateTime>();
 
-            for (int i = 0; i < clientsList.Count; i++)
+            for (int i = 0; i < salaamClientDateTimes.Count; i++)
             {
-                if (DateTime.Now.Subtract((DateTime)clientsList[i].LastTimeSeen) > disappearanceDelay)
+                DateTime dateTime = salaamClientDateTimes[i].Time;
+
+                if (DateTime.Now.Subtract(dateTime) > disappearanceDelay)
                 {
                     if (ClientDisappeared != null)
                     {
-                        ClientDisappeared(this, new SalaamClientEventArgs(clientsList[i]));
+                        IPAddress ipAddress = salaamClientDateTimes[i].Client.Address;
+
+                        bool isFromLocal;
+
+                        if (currentIPAddresses.Contains(ipAddress) || IPAddress.IsLoopback(ipAddress))
+                        {
+                            isFromLocal = true;
+                        }
+                        else
+                        {
+                            isFromLocal = false;
+                        }
+
+                        ClientDisappeared(this, new SalaamClientEventArgs(salaamClientDateTimes[i].Client, isFromLocal));
                     }
                 }
                 else
                 {
-                    salaamClients.Add(clientsList[i]);
+                    tempClientDateTimes.Add(salaamClientDateTimes[i]);
                 }
             }
 
-            clientsList = salaamClients;
+            salaamClientDateTimes = tempClientDateTimes;
         }
 
         ~SalaamBrowser()
@@ -176,7 +191,6 @@ namespace Dolphins.Salaam
         /// Gets or sets the disappearance delay in seconds.
         /// </summary>
         /// <value>The disappearance delay.</value>
-        /// <remarks></remarks>
         public int DisappearanceDelay
         {
             get
@@ -265,6 +279,8 @@ namespace Dolphins.Salaam
 
             try
             {
+                salaamClientDateTimes.Clear();
+
                 currentHostName = Dns.GetHostName();
 
                 currentIPAddresses.Clear();
@@ -288,9 +304,8 @@ namespace Dolphins.Salaam
 
                 isBrowserRunning = true;
             }
-            catch(Exception ex)
+            catch
             {
-                Console.WriteLine(ex.Message);
                 if (StartFailed != null)
                 {
                     StartFailed(this, new EventArgs());
@@ -310,10 +325,10 @@ namespace Dolphins.Salaam
         {
             IPEndPoint tempIPEndPoint = new IPEndPoint(ipEndPoint.Address, ipEndPoint.Port);
 
-            UdpClient tempUdpClient = (UdpClient) asyncResult.AsyncState;
-
             try
             {
+                UdpClient tempUdpClient = (UdpClient) asyncResult.AsyncState;
+
                 byte[] bytes = tempUdpClient.EndReceive(asyncResult, ref tempIPEndPoint);
 
                 ProcessClientData(bytes, tempIPEndPoint);
@@ -383,23 +398,24 @@ namespace Dolphins.Salaam
                                     protocolMessage = dataMatch.Groups["ProtocolMessage"].Value;
                                 }
 
-                                if (!ReceivesSelfPackets)
+                                bool isFromLocal = false;
+
+                                if (hostName.ToLower() == currentHostName.ToLower() && (currentIPAddresses.Contains(ipAddress) || IPAddress.IsLoopback(ipAddress)))
                                 {
-                                    if (hostName.ToLower() == currentHostName.ToLower() &&
-                                        currentIPAddresses.Contains(ipAddress) &&
-                                        (serviceType.ToLower() == selfServiceType.ToLower()) &&
-                                        port == selfServicePort)
+                                    isFromLocal = true;
+
+                                    if (!ReceiveFromLocalMachine)
                                     {
                                         return;
                                     }
                                 }
 
-                                if (ServiceType == "*" || serviceType.ToLower() == ServiceType)
+                                if (ServiceType == "*" || serviceType.ToLower() == ServiceType.ToLower())
                                 {
                                     SalaamClient salaamClient = new SalaamClient(ipAddress, hostName, serviceType, name,
                                                                                  port, message);
 
-                                    processSalaamClient(salaamClient, protocolMessage);
+                                    processSalaamClient(salaamClient, protocolMessage, isFromLocal);
                                 }
                                 else
                                 {
@@ -422,25 +438,25 @@ namespace Dolphins.Salaam
             }
         }
 
-        private void processSalaamClient(SalaamClient salaamClient, string protocolMessage)
+        private void processSalaamClient(SalaamClient salaamClient, string protocolMessage, bool isFromLocal)
         {
-            bool contains = clientsList.Contains(salaamClient);
+            bool contains = salaamClientDateTimes.Contains(new SalaamClientDateTime(salaamClient));
 
             if (contains)
             {
-                int index = clientsList.IndexOf(salaamClient);
+                int index = salaamClientDateTimes.IndexOf(new SalaamClientDateTime(salaamClient));
 
-                clientsList[index].LastTimeSeen = DateTime.Now;
+                salaamClientDateTimes[index].Time = DateTime.Now;
 
                 if (string.IsNullOrEmpty(protocolMessage))
                 {
-                    if (salaamClient.Message != clientsList[index].Message)
+                    if (salaamClient.Message != salaamClientDateTimes[index].Client.Message)
                     {
-                        clientsList[index].SetMessage(salaamClient.Message);
+                        salaamClientDateTimes[index].Client.SetMessage(salaamClient.Message);
 
                         if (ClientMessageChanged != null)
                         {
-                            ClientMessageChanged(this, new SalaamClientEventArgs(clientsList[index]));
+                            ClientMessageChanged(this, new SalaamClientEventArgs(salaamClientDateTimes[index].Client, isFromLocal));
                         }
                     }
                 }
@@ -450,9 +466,9 @@ namespace Dolphins.Salaam
                     {
                         if (ClientDisappeared != null)
                         {
-                            ClientDisappeared(this, new SalaamClientEventArgs(clientsList[clientsList.IndexOf(salaamClient)]));
+                            ClientDisappeared(this, new SalaamClientEventArgs(salaamClientDateTimes[index].Client, isFromLocal));
 
-                            clientsList.Remove(salaamClient);
+                            salaamClientDateTimes.Remove(salaamClientDateTimes[index]);
                         }
                     }
                 }
@@ -461,15 +477,13 @@ namespace Dolphins.Salaam
             {
                 if (string.IsNullOrEmpty(protocolMessage))
                 {
-                    clientsList.Add(salaamClient);
+                    salaamClientDateTimes.Add(new SalaamClientDateTime(salaamClient, DateTime.Now));
 
-                    int index = clientsList.Count - 1;
-
-                    clientsList[index].LastTimeSeen = DateTime.Now;
+                    int index = salaamClientDateTimes.Count - 1;
 
                     if (ClientAppeared != null)
                     {
-                        ClientAppeared(this, new SalaamClientEventArgs(clientsList[index]));
+                        ClientAppeared(this, new SalaamClientEventArgs(salaamClientDateTimes[index].Client, isFromLocal));
                     }
                 }
                 else
@@ -516,6 +530,76 @@ namespace Dolphins.Salaam
             if (Stopped != null)
             {
                 Stopped(this, new EventArgs());
+            }
+        }
+
+        /// <summary>
+        /// A private class used to hold the DateTime objects for the Individual SalaamClients
+        /// </summary>
+        private class SalaamClientDateTime:IEquatable<SalaamClientDateTime>
+        {
+            public SalaamClient Client { get; private set; }
+
+            public DateTime Time { get; set; }
+
+            public SalaamClientDateTime(SalaamClient client, DateTime time = new DateTime())
+            {
+                Client = client;
+
+                Time = time;
+            }
+
+            public static bool operator ==(SalaamClientDateTime salaamClientDateTime1, SalaamClientDateTime salaamClientDateTime2)
+            {
+                return salaamClientDateTime1.Client == salaamClientDateTime2.Client;
+            }
+
+            public static bool operator !=(SalaamClientDateTime salaamClientDateTime1, SalaamClientDateTime salaamClientDateTime2)
+            {
+                return !(salaamClientDateTime1 == salaamClientDateTime2);
+            }
+
+            public bool Equals(SalaamClientDateTime other)
+            {
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return Equals(other.Client, Client) && other.Time.Equals(Time);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                if (obj.GetType() != typeof (SalaamClientDateTime))
+                {
+                    return false;
+                }
+
+                return Equals((SalaamClientDateTime) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (Client.GetHashCode()*397) ^ Time.GetHashCode();
+                }
             }
         }
     }

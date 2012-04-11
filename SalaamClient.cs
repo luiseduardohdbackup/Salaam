@@ -4,7 +4,7 @@ using System.Net;
 namespace Dolphins.Salaam
 {
     /// <summary>
-    /// 
+    /// This class represents a SalaamClient that contains the client information.
     /// </summary>
     public class SalaamClient : IEquatable<SalaamClient>
     {
@@ -42,15 +42,7 @@ namespace Dolphins.Salaam
         /// Gets or Sets the name of the host.
         /// </summary>
         /// <value>The name of the host.</value>
-        /// <remarks></remarks>
         public string HostName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the last time seen.
-        /// </summary>
-        /// <value>The last time seen.</value>
-        /// <remarks></remarks>
-        public object LastTimeSeen { get; set; }
 
         /// <summary>
         /// Gets the name.
@@ -70,14 +62,13 @@ namespace Dolphins.Salaam
         /// <summary>
         /// Gets the message.
         /// </summary>
-        /// <remarks></remarks>
         public string Message { get; private set; }
 
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
-        /// <param name="salamClient1">The salam client1.</param>
-        /// <param name="salamClient2">The salam client2.</param>
+        /// <param name="salamClient1">The salaam client1.</param>
+        /// <param name="salamClient2">The salaam client2.</param>
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(SalaamClient salamClient1, SalaamClient salamClient2)
         {
@@ -94,10 +85,9 @@ namespace Dolphins.Salaam
         /// <summary>
         /// Implements the operator !=.
         /// </summary>
-        /// <param name="salamClient1">The salam client1.</param>
-        /// <param name="salamClient2">The salam client2.</param>
+        /// <param name="salamClient1">The salaam client1.</param>
+        /// <param name="salamClient2">The salaam client2.</param>
         /// <returns>The result of the operator.</returns>
-        /// <remarks></remarks>
         public static bool operator !=(SalaamClient salamClient1, SalaamClient salamClient2)
         {
             return !(salamClient1 == salamClient2);
@@ -107,7 +97,6 @@ namespace Dolphins.Salaam
         /// Sets the message.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <remarks></remarks>
         public void SetMessage(string message)
         {
             Message = message;
@@ -118,7 +107,6 @@ namespace Dolphins.Salaam
         /// </summary>
         /// <param name="other">An object to compare with this object.</param>
         /// <returns>true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.</returns>
-        /// <remarks></remarks>
         public bool Equals(SalaamClient other)
         {
             if (ReferenceEquals(null, other))
@@ -141,7 +129,6 @@ namespace Dolphins.Salaam
         /// <returns>true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.</returns>
         /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.
         ///   </exception>
-        /// <remarks></remarks>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

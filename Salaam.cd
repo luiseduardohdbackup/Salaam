@@ -3,7 +3,7 @@
   <Class Name="Dolphins.Salaam.SalaamClient">
     <Position X="2.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>gAAIAAAAAAAgAAAAgAAAAAYACAAAAIACAAAAIAAAAiA=</HashCode>
+      <HashCode>gAAIAAAAAAAAAAAAgAAAAAYACAAAAIACAAAAIAAAAiA=</HashCode>
       <FileName>SalaamClient.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -11,28 +11,43 @@
   <Class Name="Dolphins.Salaam.SalaamService" BaseTypeListCollapsed="true">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>IAQIgAAAACIAAIAAEIAAAAQQCIAhAAiBAAAAIAAAEAA=</HashCode>
+      <HashCode>IAYIgAAAACIAEIAAEIAAAAQQCIAhAAiBAAAAIAAAEAA=</HashCode>
       <FileName>SalaamService.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Dolphins.Salaam.SalaamBrowser">
-    <Position X="4.5" Y="0.5" Width="2.25" />
+    <Position X="4.5" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
-      <Delegate Name="Dolphins.Salaam.SalaamBrowser.SalaamClientEventHandler" Collapsed="true">
+      <Delegate Name="Dolphins.Salaam.SalaamBrowser.SalaamClientEventHandler">
         <TypeIdentifier>
           <NewMemberFileName>SalaamBrowser.cs</NewMemberFileName>
         </TypeIdentifier>
       </Delegate>
+      <Class Name="Dolphins.Salaam.SalaamBrowser.SalaamClientDateTime">
+        <TypeIdentifier>
+          <NewMemberFileName>SalaamBrowser.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="Dolphins.Salaam.SalaamBrowser.SalaamServiceTypePortEntry">
+        <TypeIdentifier>
+          <NewMemberFileName>SalaamBrowser.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>IAQIAQAAgCYgAYgAA8AAEAgAAAMAAQgBKAEASAAAAAA=</HashCode>
+      <HashCode>IARIAQAIgCYgAYgAA8AIEAgAAAIAAAgBIAABCAAAAAA=</HashCode>
       <FileName>SalaamBrowser.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Dolphins.Salaam.SalaamClientEventArgs">
-    <Position X="7" Y="0.5" Width="2" />
+    <Position X="7.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>SalaamClientEventArgs.cs</FileName>
