@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Salaam by Dolphins</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Salaam</h1>
+<p>This Library is a Cross Platform, UDP Broadcast solution for Peer to Peer network client detection. It is written in pure C# and is Mono and .Net compatible. It has been tested on Mac OS X, Windows, Linux, iOS, Android, Xbox and it is expected to be compatible with every other Mono compatible platform.The library is ready to use out of box and there is almost zero configurations needed for it to start working, regarding that, it is also flexible and configurable for your needs.</p>
+        <p class="view"><a href="https://github.com/Dolphins/Salaam">View the Project on GitHub <small>Dolphins/Salaam</small></a></p>
+        <ul>
+          <li><a href="https://github.com/Dolphins/Salaam/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Dolphins/Salaam/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Dolphins/Salaam">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Dolphins.Salaam</h1>
+
+<h2>What is Salaam?</h2>
+
+<p>Salaam is a cross-platform library written in C# and available for Windows versions which could serve .Net Framework 2.0 or upper, Mac OS X, Linux, iOS, Android, XNA, Solaris and many operating systems that Mono and .Net can work with.
+In a simple word, it is very similar to Apple's Bonjour; but if it is similar to Apple's Bonjour, why someone should use this library? we were working on a cross-platform network application and we tried to use Apple's Bonjour to locate the peers on the network using Mono.ZeroConf from Mono project, but there were some problems using this library including that the bonjour service must have been installed on the OS before using the application and besides that the Mono.ZeroConf may not be working on all versions of all Operating Systems (In our case, some new versions of linux). So we decided to create Salaam (Like 'Bonjour' that means 'Hello' in French, 'Salaam' means 'Hello' too in Persian) library to solve these problems.</p>
+
+<p>If you have a server application and one or two client application and you want clients to find the server or vice versa, a great choice for you is Salaam because you can use Salaam as a interface to connect peers easily. You just need to make a instance of SalaamService and set your application's details like the port you use in the server application and its name, and then register the Salaam service to start network broadcasting. Beside of this, Salaam browsers can see the registered Salaam services, so you need to setup a Salaam browser on the client side of your application. Then you find the address and port of the server application in your client application and now it is easy to connect using any internet protocol or socket options to connect to your server application.</p>
+
+<p>Salaam uses UdpClient class to broadcast the service over Udp protocol. This protocol gives access to the possibilities which Tcp doesn't, like connectionless packets transfer.</p>
+
+<h2>How to use Salaam?</h2>
+
+<p>In the following code sample, it is illustrated how to use this very simple library in your application. There are also sample codes available for download in download section provided for better understanding of code usage.
+All the Salaam classes are located inside the Dolphins.Salaam namespace.
+SalaamService:
+The first step, is to setup the SalaamService on your server application. the following code demonstrates this step. (Suppose our Application is a LAN chat application which uses Tcp)</p>
+
+<pre><code>SalaamService service = new SalaamService("_myApp._tcp", "My Application", 2000);
+service.Register();
+</code></pre>
+
+<p>According to the recent code, we are announcing to the clients on the LAN that the application named My Application is listening for incoming connections on port 2000 (This is the port that the chat application is listening on, not the port, Salaam uses to broadcast on. This it a very important matter that we have to keep in mind). That's clear but what is the first argument 'Service Type'? Just like the Apple's Bonjour, this string is being used to identify different Applications on the network which are using Salaam to broadcast their services. Everyone of these applications, has its own communication protocol and uses this 'Service Type' as an identification to its service, so other clients which use the same communication protocol (say for example HTTP) can easily identify this application and connect it using the provided port.
+An standard format that Apple uses in Bonjour for 'Service Type' is _yourApplicationProtocol._networkProtocol so in this case we used _myApp._tcp (An HTTP server may use _http._tcp like the way HTTP Server that use Bonjour do).</p>
+
+<h2>SalaamBrowser:</h2>
+
+<p>Just like the SalaamService , we will start by the simplest and quickest way to setup the SalaamBrowser and then we will read more advanced documentations.
+As in the first step, we have setup the SalaamService, the second step is to setup the SalaamBrowser. The following code demonstrates the simplest code we can use.</p>
+
+<pre><code>SalaamBrowser browser = new SalaamBrowser();
+browser.Start("_myApp._tcp");
+</code></pre>
+
+<p>As you can see, it is very simple to setup and start the Salaam browser but how to figure out when a peer appears on the network or even when is disappears? There are two options to access the peers' instances in the form of a SalaamClient, we can use browser.SalaamClients to get the list of all found SalaamClient peers or to handle the ClientAppeared and ClientDisappeared to be notified whenever a peer appears or disappears.</p>
+
+<h2>SalaamClient:</h2>
+
+<p>This is a read-only class used to get information concerning a peer's information.</p>
+
+<h2>SalaamClientEventArgs:</h2>
+
+<p>SalaamClientEventArgs class is used as a means of event argument in many events, further to getting instance of SalaamClient, you can determine whether this appeared client is from the local machine or not. This class is used in events where we need to get information about the client that raised the event.</p>
+
+<p><em>Salaam library works on almost all, .Net Framework 2 and Mono compatible applications. This library is a lightweight easy to use and only uses the System namespace of the .Net or Mono.</em></p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/Dolphins">Dolphins</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
