@@ -7,14 +7,31 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Debug|x86.ActiveCfg = Debug|x86
 		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Debug|x86.Build.0 = Debug|x86
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|x86.ActiveCfg = Release|x86
 		{7A9503DC-6A20-463F-BDA9-FC0F9234D34E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Dolphins.Salaam.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.StandardHeader = $2
+		$2.Text = 
+		$2.IncludeInNewFiles = True
+		$0.VersionControlPolicy = $3
+		$3.inheritsSet = Mono
+		$0.ChangeLogPolicy = $4
+		$4.UpdateMode = None
+		$4.MessageStyle = $5
+		$5.LineAlign = 0
+		$4.inheritsSet = Mono
 	EndGlobalSection
 EndGlobal
