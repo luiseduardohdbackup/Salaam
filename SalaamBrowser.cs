@@ -571,7 +571,7 @@ namespace Dolphins.Salaam
                     return true;
                 }
 
-                return Equals(other.Client, Client) && other.Time.Equals(Time);
+                return Equals(other.Client, Client);
             }
 
             public override bool Equals(object obj)
@@ -598,7 +598,7 @@ namespace Dolphins.Salaam
             {
                 unchecked
                 {
-                    return (Client.GetHashCode()*397) ^ Time.GetHashCode();
+                    return Client.GetHashCode();
                 }
             }
         }

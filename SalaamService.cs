@@ -55,7 +55,7 @@ namespace Dolphins.Salaam
 
             try
             {
-                udpClient = new UdpClient {EnableBroadcast = true, ExclusiveAddressUse = true};
+                udpClient = new UdpClient {EnableBroadcast = true, ExclusiveAddressUse = false};
 
                 BroadcastAddress = IPAddress.Broadcast;
 
